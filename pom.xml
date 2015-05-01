@@ -25,6 +25,7 @@
     </properties>
 
     <modules>
+        <module>adapter-api</module>
         <module>webapp</module>
     </modules>
 
