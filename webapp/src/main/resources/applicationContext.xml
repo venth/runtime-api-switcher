@@ -36,12 +36,24 @@
         <entry key="1.0">
             <bean parent="osgiServiceProxy"
                   p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService"
-            />
+            >
+                <property name="requiredFeatures">
+                    <set>
+                        <value>1.0</value>
+                    </set>
+                </property>
+            </bean>
         </entry>
         <entry key="2.0">
             <bean parent="osgiServiceProxy"
                   p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService"
-            />
+            >
+                <property name="requiredFeatures">
+                    <set>
+                        <value>2.0</value>
+                    </set>
+                </property>
+            </bean>
         </entry>
     </util:map>
 

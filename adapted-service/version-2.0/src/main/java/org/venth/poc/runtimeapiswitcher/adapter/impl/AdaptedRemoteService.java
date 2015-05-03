@@ -13,12 +13,12 @@ import java.util.Set;
 public class AdaptedRemoteService implements AdaptedService {
     @Override
     public String version() {
-        return "1.0";
+        return "2.0";
     }
 
     @Override
     public Holder feature(Holder holder) {
-        return new Holder(holder.message + " 1.0");
+        return new Holder(holder.message + " 2.0");
     }
 
     @Override

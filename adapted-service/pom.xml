@@ -16,7 +16,7 @@
     <url>http://maven.apache.org</url>
 
     <modules>
-
         <module>version-1.0</module>
+        <module>version-2.0</module>
     </modules>
 </project>

@@ -44,8 +44,8 @@ public class RuntimeApiSwitcherTest {
         //then the service responded with version 1.0
         assertEquals(versionForActivation, currentAdapterVersion());
 
-        //and feature service is handled by version 2.0
-        assertEquals("Feature handled by service version 2.0", handledFeatureResult());
+        //and feature service is handled by version 1.0
+        assertEquals("Feature handled by service version 1.0", handledFeatureResult());
 
     }
 
@@ -66,7 +66,7 @@ public class RuntimeApiSwitcherTest {
         assertEquals(switchedVersion, serviceResponse);
 
         //and feature service is handled by version 2.0
-        assertEquals("feature handled by 2.0", handledFeatureResult());
+        assertEquals("Feature handled by service version 2.0", handledFeatureResult());
     }
 
     private void switchAdapterVersionTo(String version) {

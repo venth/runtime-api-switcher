@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -29,6 +30,11 @@ public class ApplicationResource {
         @Override
         public String version() {
             return "unknown";
+        }
+
+        @Override
+        public Set<String> supports() {
+            return Collections.emptySet();
         }
 
         @Override
