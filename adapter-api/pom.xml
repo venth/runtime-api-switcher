@@ -16,6 +16,6 @@
     <url>http://maven.apache.org</url>
 
     <build>
-        <finalName>runtime-api-switcher-adapter-api-${project.version}</finalName>
+        <finalName>${parent.artifactId}-${project.artifactId}-${project.version}</finalName>
     </build>
 </project>

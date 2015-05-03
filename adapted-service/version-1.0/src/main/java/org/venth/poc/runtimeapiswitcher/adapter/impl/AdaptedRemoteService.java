@@ -1,14 +1,11 @@
 package org.venth.poc.runtimeapiswitcher.adapter.impl;
 
-import org.apache.felix.ipojo.annotations.Component;
-import org.apache.felix.ipojo.annotations.Provides;
-import org.venth.poc.runtimeapiswitcher.adapter.api.AdaptedService;
+import org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService;
+import org.venth.poc.runtimeapiswitcher.api.adapter.Holder;
 
 /**
  * @author Venth on 01/05/2015
  */
-@Component
-@Provides
 public class AdaptedRemoteService implements AdaptedService {
     @Override
     public String version() {
@@ -16,7 +13,7 @@ public class AdaptedRemoteService implements AdaptedService {
     }
 
     @Override
-    public String feature() {
-        return "feature handled by service version 1.0";
+    public Holder feature(Holder holder) {
+        return new Holder(holder.message + " 1.0");
     }
 }

@@ -17,7 +17,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
@@ -33,6 +35,8 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
     private ServletContext servletContext;
 
     private String bundlesLocation;
+
+    private List<String> extraPackages = Collections.emptyList();
 
     @Override
     public Class<?> getObjectType() {
@@ -69,6 +73,14 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
         ).iterator().next();
 
         Map<String, String> config = new HashMap<>();
+        try {
+            config.put("felix.cache.rootdir", Files.createTempDirectory("osgi_bundles").toFile().getAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        config.put("org.osgi.framework.storage.clean", "onFirstInit");
+        config.put("felix.bootdelegation.implicit", Boolean.TRUE.toString());
+        config.put("org.osgi.framework.system.packages.extra", String.join(";", extraPackages));
 
         return frameworkFactory.newFramework(config);
     }
@@ -123,5 +135,9 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
                 });
             }
         }
+    }
+
+    public void setExtraPackages(List<String> extraPackages) {
+        this.extraPackages = extraPackages;
     }
 }

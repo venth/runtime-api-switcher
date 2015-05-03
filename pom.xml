@@ -27,8 +27,6 @@
 
         <!-- osgi -->
         <apache-felix.version>4.6.1</apache-felix.version>
-        <apache-felix.ipojo.version>1.12.1</apache-felix.ipojo.version>
-        <apache-felix.configadmin.version>1.8.4</apache-felix.configadmin.version>
 
         <!-- logging stuff -->
         <slf4j.version>1.7.12</slf4j.version>
@@ -57,24 +55,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>${apache-felix.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.ipojo.annotations</artifactId>
-                <version>${apache-felix.ipojo.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.ipojo</artifactId>
-                <version>${apache-felix.ipojo.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.configadmin</artifactId>
-                <version>${apache-felix.configadmin.version}</version>
             </dependency>
 
             <dependency>
@@ -191,18 +171,6 @@
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>${maven-bundle-plugin.version}</version>
                     <extensions>true</extensions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-ipojo-plugin</artifactId>
-                    <version>${maven-ipojo-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>ipojo-bundle</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

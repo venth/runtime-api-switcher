@@ -8,7 +8,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class ServiceApplication extends ResourceConfig {
     public ServiceApplication() {
 
+
         //resources
-        register(ApplicationResource.class);
+        //register(ApplicationResource.class);
     }
 }

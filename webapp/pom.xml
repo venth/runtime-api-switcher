@@ -134,23 +134,6 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${bundles.dir}</outputDirectory>
                                 </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.felix</groupId>
-                                    <artifactId>org.apache.felix.configadmin</artifactId>
-                                    <version>${apache-felix.configadmin.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${bundles.dir}</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.felix</groupId>
-                                    <artifactId>org.apache.felix.ipojo</artifactId>
-                                    <version>${apache-felix.ipojo.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${bundles.dir}</outputDirectory>
-                                </artifactItem>
-
                             </artifactItems>
                         </configuration>
                     </execution>

@@ -1,4 +1,4 @@
-package org.venth.poc.runtimeapiswitcher.adapter.api;
+package org.venth.poc.runtimeapiswitcher.api.adapter;
 
 /**
  * @author Venth on 01/05/2015
@@ -6,5 +6,5 @@ package org.venth.poc.runtimeapiswitcher.adapter.api;
 public interface AdaptedService {
     String version();
 
-    String feature();
+    Holder feature(Holder holder);
 }
