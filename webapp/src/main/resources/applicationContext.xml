@@ -2,10 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
         >
 
@@ -25,36 +24,12 @@
         </property>
     </bean>
 
-    <bean id="osgiServiceProxy" class="org.venth.poc.runtimeapiswitcher.webapp.osgi.OsgiServiceProxy"
-          depends-on="osgiContainer"
-          destroy-method="stop"
+    <bean id="osgiServiceProxy" class="org.venth.poc.runtimeapiswitcher.webapp.osgi.OsgiVersionSwitchableServiceProxyFactoryBean"
+          destroy-method="releaseService"
           abstract="true"
           p:context-ref="osgiContainer"
-            />
+          p:defaultVersion="1.0"
+    />
 
-    <util:map id="adaptedServices" key-type="java.lang.String" value-type="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService">
-        <entry key="1.0">
-            <bean parent="osgiServiceProxy"
-                  p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService"
-            >
-                <property name="requiredFeatures">
-                    <set>
-                        <value>1.0</value>
-                    </set>
-                </property>
-            </bean>
-        </entry>
-        <entry key="2.0">
-            <bean parent="osgiServiceProxy"
-                  p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService"
-            >
-                <property name="requiredFeatures">
-                    <set>
-                        <value>2.0</value>
-                    </set>
-                </property>
-            </bean>
-        </entry>
-    </util:map>
-
+    <bean parent="osgiServiceProxy" p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService" />
 </beans>
