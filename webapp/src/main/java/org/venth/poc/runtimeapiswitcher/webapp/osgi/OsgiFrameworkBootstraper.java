@@ -4,15 +4,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +26,6 @@ import java.util.stream.Stream;
  */
 public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext> implements ServletContextAware {
     static final int STOP_TIMEOUT_IN_MILLIS = 10000;
-    private static final Logger LOG = LoggerFactory.getLogger(OsgiFrameworkBootstraper.class);
 
     private Framework framework;
     private ServletContext servletContext;
@@ -64,7 +60,7 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
 
     private void loadBundles(Framework framework, String bundlesLocation) throws IOException {
         BundleLoader bundleLoader = new BundleLoader(framework.getBundleContext());
-        bundleLoader.installFrom(servletContext.getResource(bundlesLocation));
+        bundleLoader.installAndStartFrom(servletContext.getRealPath(bundlesLocation));
     }
 
     private Framework createOsgiFramework() {
@@ -73,16 +69,48 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
         ).iterator().next();
 
         Map<String, String> config = new HashMap<>();
+        /*
+        * Sets the root directory used to calculate the bundle cache directory for relative directory names.
+        * If org.osgi.framework.storage is set to a relative name, by default it is relative to
+        * the current working directory. If this property is set, then it will be calculated as being relative to
+        * the specified root directory.
+        * */
+        config.put("felix.cache.rootdir", getCreatedTemporaryDirectory());
+        /*
+        * Specifies a comma-delimited list of packages that should be exported via the System Bundle
+        * from the framework class loader in addition to the packages
+        * in org.osgi.framework.system.packages. The default value is empty.
+        * If a value is specified, it is appended to the list of default or specified packages
+        * in org.osgi.framework.system.packages.
+        * */
+        config.put("org.osgi.framework.system.packages.extra", String.join(",", extraPackages));
+        /*
+        * Determines whether the bundle cache is flushed. The value can either be "none" or "onFirstInit", where "none"
+        * does not flush the bundle cache and "onFirstInit" flushes the bundle cache when the framework instance is
+        * first initialized. The default value is "none".
+        */
+        config.put("org.osgi.framework.storage.clean", "onFirstInit");
+        /*
+        * Specifies whether the framework should try to guess when to implicitly boot delegate to
+        * ease integration with external code. The default value is true.
+        * */
+        config.put("felix.bootdelegation.implicit", Boolean.TRUE.toString());
+        /*
+        * Specifies which class loader is used for boot delegation. Possible values are: boot for the boot class loader,
+        * app for the application class loader, ext for the extension class loader, and framework for
+        * the framework's class loader. The default is boot.
+        */
+        config.put("org.osgi.framework.bundle.parent", "app");
+
+        return frameworkFactory.newFramework(config);
+    }
+
+    private String getCreatedTemporaryDirectory() {
         try {
-            config.put("felix.cache.rootdir", Files.createTempDirectory("osgi_bundles").toFile().getAbsolutePath());
+            return Files.createTempDirectory("osgi_bundles").toFile().getAbsolutePath();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        config.put("org.osgi.framework.storage.clean", "onFirstInit");
-        config.put("felix.bootdelegation.implicit", Boolean.TRUE.toString());
-        config.put("org.osgi.framework.system.packages.extra", String.join(";", extraPackages));
-
-        return frameworkFactory.newFramework(config);
     }
 
     public void setBundlesLocation(String bundlesLocation) {
@@ -102,7 +130,7 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
         }
 
 
-        public void installFrom(URL bundlesLocation) throws IOException {
+        public void installAndStartFrom(String bundlesLocation) throws IOException {
             installAllFoundBundlesOn(bundlesLocation);
             startAllInstalledBundles();
         }
@@ -118,11 +146,11 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
                     });
         }
 
-        private void installAllFoundBundlesOn(URL bundlesLocation) throws IOException {
+        private void installAllFoundBundlesOn(String bundlesLocation) throws IOException {
             try(
                     Stream<Path> bundles = Files.list(
                         FileSystems.getDefault().getPath(
-                                bundlesLocation.getFile()
+                                bundlesLocation
                         )
                     )
             ) {

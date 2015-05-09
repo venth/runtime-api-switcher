@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Venth
  * please start the server with the web application manually
+ * or run: mvn integration-tests
  */
 @Category(IntegrationTest.class)
 public class RuntimeApiSwitcherTest {
