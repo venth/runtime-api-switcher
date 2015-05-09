@@ -3,6 +3,8 @@ package org.venth.poc.runtimeapiswitcher;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.venth.poc.runtimeapiswitcher.test.IntegrationTest;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
  * @author Venth
  * please start the server with the web application manually
  */
+@Category(IntegrationTest.class)
 public class RuntimeApiSwitcherTest {
 
     private WebTarget versionResource;
