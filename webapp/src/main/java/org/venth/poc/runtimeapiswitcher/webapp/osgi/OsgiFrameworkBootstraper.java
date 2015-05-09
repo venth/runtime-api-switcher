@@ -100,7 +100,13 @@ public class OsgiFrameworkBootstraper extends AbstractFactoryBean<BundleContext>
         * app for the application class loader, ext for the extension class loader, and framework for
         * the framework's class loader. The default is boot.
         */
-        config.put("org.osgi.framework.bundle.parent", "app");
+        config.put("org.osgi.framework.bundle.parent", "boot");
+        /*
+        * Flag to indicate whether to activate the URL Handlers service for the framework instance;
+        * the default value is true. Activating the URL Handlers service will result in
+        * the URL.setURLStreamHandlerFactory() and URLConnection.setContentHandlerFactory() being called.
+        * */
+        config.put("felix.service.urlhandlers", Boolean.TRUE.toString());
 
         return frameworkFactory.newFramework(config);
     }

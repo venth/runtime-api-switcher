@@ -58,3 +58,6 @@ and an instance declaration:
 <bean parent="osgiServiceProxy" p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService" />
 ```
 In the application's code the declared service could be injected for example by @Autowire annotation.
+
+Issues:
+- Bundled spring cannot find any beans declared by annotations

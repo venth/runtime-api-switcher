@@ -30,9 +30,6 @@
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Export-Package>!*</Export-Package>
-                        <DynamicImport-Package>
-                            *
-                        </DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
