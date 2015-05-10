@@ -8,9 +8,8 @@ Rules of engagement:
 Because, it's a PoC I wrote only three test scenarios to verify, if the switching will work. These scenarios are
 contained in RuntimeApiSwitcherTest.
 
-mvn clean package -DskipTests
+mvn clean integration-test
 
-Tests skipping is needed because I didn't embedded tomcat plugin into the build (laziness). 
 Adapter bundles are copied to /WEB-INF/bundles directory of Web Application during pre-package phase.
 
 Once, the web application is built, deliver it, please, to a standalone tomcat running on localhost:8080.
@@ -55,9 +54,59 @@ In spring descriptor there is parent bean declaration (shorthand decreasing typi
 and an instance declaration:
 
 ```
-<bean parent="osgiServiceProxy" p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService" />
+<bean parent="osgiServiceProxy" 
+    p:serviceType="org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService"
+/>
 ```
 In the application's code the declared service could be injected for example by @Autowire annotation.
 
+Bundling Spring isn't easy task, still is doable. 
+
 Issues:
-- Bundled spring cannot find any beans declared by annotations
+- Bundled spring cannot find any beans declared by annotations (found solution for that ;)
+- spring has a lot of different dependencies... some of them are unnecessary. The bundling process makes 
+  the dependencies to be mandatory.
+
+The solution for many spring dependencies is usage of an optional resolution directive provided by osgi.
+```
+<Import-Package>
+    *;resolution:=optional
+</Import-Package>
+```
+
+Classpath scanning seems to be handled only for equinox platform. Please see class: 
+org.springframework.core.io.support.PathMatchingResourcePatternResolver
+```java
+static {
+    try {
+        // Detect Equinox OSGi (e.g. on WebSphere 6.1)
+        Class<?> fileLocatorClass = ClassUtils.forName("org.eclipse.core.runtime.FileLocator",
+                PathMatchingResourcePatternResolver.class.getClassLoader());
+        equinoxResolveMethod = fileLocatorClass.getMethod("resolve", URL.class);
+        logger.debug("Found Equinox FileLocator for OSGi bundle URL resolution");
+    }
+    catch (Throwable ex) {
+        equinoxResolveMethod = null;
+    }
+}
+```
+
+Spring cannot handle Felix used in this PoC, because Felix doesn't provide any FileLocator. I wrote a simple class
+looking for pattern classpath*:**.class. The implemented pattern resolver doesn't look inside bundled jars. It enumerates
+only classes located direclty on bundled classpath.
+org.venth.poc.runtimeapiswitcher.osgi.OsgiBundleResourceResolver
+
+To use this resolver I simply created a anonymous class from ClassPathXmlApplicationContext.
+```java
+springContext = new ClassPathXmlApplicationContext("classpath:/context-ver_1.xml") {
+    @Override
+    protected ResourcePatternResolver getResourcePatternResolver() {
+        return new OsgiBundleResourceResolver();
+    }
+};
+```
+
+Test "RuntimeApiSwitcherTest" proves, that spring annotation scanning is working. To run integration tests use:
+```
+mvn integration-test
+```

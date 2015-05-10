@@ -24,11 +24,12 @@
                     <instructions>
                         <Bundle-Activator>org.venth.poc.runtimeapiswitcher.adapter.impl.Activator</Bundle-Activator>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <!-- all runtime and compile dependencies -->
+                        <!-- all runtime and compile dependencies and their transitive dependencies are bundled-->
                         <Embed-Dependency>
                             *;scope=compile|runtime;inline=false
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
+                        <!-- don't wont to export anything -->
                         <Export-Package>!*</Export-Package>
                         <Import-Package>
                             *;resolution:=optional
@@ -50,6 +51,11 @@
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

@@ -1,11 +1,13 @@
 package org.venth.poc.runtimeapiswitcher.adapter.impl;
 
+import org.springframework.stereotype.Component;
 import org.venth.poc.runtimeapiswitcher.api.adapter.AdaptedService;
 import org.venth.poc.runtimeapiswitcher.api.adapter.Holder;
 
 /**
  * @author Venth on 01/05/2015
  */
+@Component
 public class AdaptedRemoteService implements AdaptedService {
     @Override
     public String version() {
